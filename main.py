@@ -75,11 +75,10 @@ class randomData():
 
     def __init__(self, intAmout, intPasswdLength, blnCreateCSV = 0):
         if blnCreateCSV:
-            f = open(self.outputfile, "w")
-            global Users
-            Users = self.gendata(intAmout, intPasswdLength)
-            f.write(json.dumps(Users))
-            f.close()
+            with open(self.outputfile, "w") as f:
+                global Users
+                Users = self.gendata(intAmout, intPasswdLength)
+                f.write(json.dumps(Users))
             Automate(Users)
             print("{} generated in {}{}".format(self.outputfile, os.getcwd(), self.outputfile))
         else:
@@ -98,11 +97,10 @@ class randomData():
             FinalNames: List with the names selected.
         """
 
-        NamesFile = open(os.path.join(os.getcwd(),"Data","Names.csv"), 'r')
-        Names = NamesFile.readlines()
-        NamesFile.close()
+        with open(os.path.join(os.getcwd(),"Data","Names.csv"), 'r') as NamesFile:
+            Names = NamesFile.readlines()
         FinalNames = []
-        for i in range(0, intAmount):
+        for _ in range(intAmount):
             RandomName = random.choice(Names).rstrip("\n")
             FinalNames.append(RandomName)
         return FinalNames
@@ -118,11 +116,10 @@ class randomData():
             FinalLastNames: List with the last names.
         """
 
-        LastNameFile = open(os.path.join(os.getcwd(), "Data", "LastNames.csv"), 'r')
-        LastNames = LastNameFile.readlines()
-        LastNameFile.close()
+        with open(os.path.join(os.getcwd(), "Data", "LastNames.csv"), 'r') as LastNameFile:
+            LastNames = LastNameFile.readlines()
         FinalLastNames = []
-        for i in range(0, intAmount):
+        for _ in range(intAmount):
             RandomLastName = random.choice(LastNames).rstrip("\n")
             FinalLastNames.append(RandomLastName)
         return FinalLastNames
@@ -139,7 +136,7 @@ class randomData():
         """
 
         Password = ''
-        for i in range(0, int(intPasswordLength)):
+        for _ in range(int(intPasswordLength)):
             char = random.choice(self.mix)
             Password += char
         return Password
@@ -159,7 +156,7 @@ class randomData():
         NamesData = self.getnames(intAmount)
         LastNameData = self.getlastnames(intAmount)
         Data = {}
-        for i in range(0, intAmount):
+        for i in range(intAmount):
             username = str(NamesData[i][:3] + LastNameData[i][:3] + str(random.randint(100,10000))).lower()
             inner = {"name": "{}".format(NamesData[i]),
                      "lastname": "{}".format(LastNameData[i]),
@@ -179,15 +176,11 @@ def main():
     #passwdlength = int(input("Password length for each password?\n>>>"))
     #question1 = input("Do you want to generate a file?\nYes/No\n>>>")
     #yesvalues = ("yes", "YES", "Yes", "Y", "y", "SI", "Si", "si", "S", "s")
-    
+
     amount =2 # total number of accounts to be created
     passwdlength = 12 #password length
 
-    #if question1 in yesvalues:
-    if True:
-        randomData(amount, passwdlength, blnCreateCSV=1)
-    else:
-        randomData(amount, passwdlength, blnCreateCSV=0)
+    randomData(amount, passwdlength, blnCreateCSV=1)
 
 if __name__ == "__main__":
     main()
